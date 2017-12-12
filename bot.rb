@@ -39,16 +39,15 @@ Telegram::Bot::Client.run(token) do |bot |
 				a.slice!"!eye l "
 				Dir.glob(a) { | file |
 					bot.api.send_message(chat_id: message.chat.id, text: file, reply_markup: markup)
-					
-					output = system "eye l #{file}"
-result = $?.success?
+										output = system "eye l #{file}"
+					result = $?.success?
 					if $?.exitstatus > 0
 						bot.api.send_message(chat_id: message.chat.id, text: "failed", reply_markup: markup)	
 					else
-bot.api.send_message(chat_id: message.chat.id, text: "output is #{output}", reply_markup: markup)	
-end}
-			end
-			if message.text.index("!eye i") == 0
+						bot.api.send_message(chat_id: message.chat.id, text: "output is #{output}", reply_markup: markup)	
+					end}
+				end
+				if message.text.index("!eye i") == 0
 					a = message.text 
 					system "eye i"
 					if $?.exitstatus > 0
