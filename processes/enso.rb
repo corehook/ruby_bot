@@ -1,7 +1,6 @@
 require 'telegram/bot'
 require 'rubygems'
-require 'yaml'
-require 'erb'
+require 'pry'
 id = false
 token = "499649310:AAGhXHTXaGDXzgRBETofl1spj_tLMdnpfYU"
 Telegram::Bot::Client.run(token) do |bot |
@@ -29,31 +28,11 @@ Telegram::Bot::Client.run(token) do |bot |
 				a.slice!"!deploy "
 				Dir.glob(a) { | file |
 					bot.api.send_message(chat_id: message.chat.id, text: file, reply_markup: markup)
-					loaded_data = YAML.load(ERB.new(File.read(file)).result)
+					#loaded_data = YAML.load(ERB.new(File.read(file)).result)
+					loaded_data = `ansible-playbook #{file} -i hosts 2>&1` 
 					bot.api.send_message(chat_id: message.chat.id, text: loaded_data.inspect, reply_markup: markup)
 				}
 			end
-			if message.text.index("!eye l") == 0
-				a = message.text 
-				a.slice!"!eye l "
-				Dir.glob(a) { | file |
-					bot.api.send_message(chat_id: message.chat.id, text: file, reply_markup: markup)
-					output = system "eye l #{file}"
-					result = $?.success?
-					if $?.exitstatus > 0
-						bot.api.send_message(chat_id: message.chat.id, text: "failed", reply_markup: markup)	
-					else
-						bot.api.send_message(chat_id: message.chat.id, text: "output is #{output}", reply_markup: markup)	
-					end}
-				end
-				if message.text.index("!eye ") == 0
-					a = message.text 
-					a.slice!"!eye "
-					system "eye #{a}"
-					if $?.exitstatus > 0
-						bot.api.send_message(chat_id: message.chat.id, text: "failed", reply_markup: markup)	
-					end
-				end
-			end					
-		end				
-	end
+		end					
+	end				
+end

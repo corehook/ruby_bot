@@ -14,8 +14,8 @@ Eye.application 'test' do
   # daemon with 3 children
   process :enso do
     pid_file 'enso.pid'
-    start_command 'ruby /root/Downloads/ruby_bot/enso.rb start'
-    stop_command  'ruby /root/Downloads/ruby_bot/enso.rb stop'
+    start_command 'ruby enso.rb start'
+    stop_command  'ruby enso.rb stop'
     stdall 'enso.log'
 
     start_timeout 10.seconds
